@@ -5,9 +5,9 @@ with open("README.md", "r") as fh:
 
 setup(
     name='vidlist',
-    version='0.0.3',
+    version='0.0.4',
     author="Sharad Raj Singh Maurya",
-    author_email="iamsharadrah@gmail.com",
+    author_email="iamsharadraj@gmail.com",
     url="https://github.com/sharadcodes/vidlist",
     description='A python utility for generating a listing of all the videos in the subfolders so that you can watch them in browser',
     long_description_content_type="text/markdown",
