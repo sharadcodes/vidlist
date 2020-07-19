@@ -48,6 +48,7 @@ def base_html(html_list):
             text-align: left;
             margin-top: 15px;
             cursor: pointer;
+            word-break: break-all;
         }
         details button:hover {
             background-color: #20aa76;
@@ -94,9 +95,11 @@ def main():
             videos = []
             for i in child.iterdir():
                 if not i.is_dir():
-                    if i.name.split(".")[1] in ["mp4", "webm", "ogv", "flv", "avi", "wmv", "3gp"]:
+                    tmp_file_name = i.name[::-1].split('.')[0] 
+                    tmp_file_name = tmp_file_name[::-1]
+                    if tmp_file_name in ["mp4", "webm", "ogv", "flv", "avi", "wmv", "3gp"]:
                         videos.append({
-                            "name": i.name.split(".")[0],
+                            "name": i.name,
                             "path": str(i.relative_to(i.parent.parent))
                         })
             classes.append({"name": child.name, "videos": videos[::-1]})
@@ -105,8 +108,7 @@ def main():
     for folder in classes:
         html += "<details><summary>" + str(folder['name']) + "</summary>"
         for video in folder['videos']:
-            html += "<button onclick='vid_play()' vtitle='{title}' vurl='{url}'>{title}</button>".format(
-                title=video['name'], url=video['path'])
+            html += "<button onclick='vid_play()' title='{title}' vtitle='{title}' vurl='{url}'>{title}</button>".format(title=video['name'], url=video['path'])
         html += "</details>"
 
     with open('vidlist.html', 'w') as f:
