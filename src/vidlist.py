@@ -84,34 +84,36 @@ def base_html(html_list):
     """
     return str(pre+html_list+post)
 
+def main():
+    cwd = Path.cwd()
+
+    classes = []
+
+    for child in cwd.iterdir():
+        if child.is_dir():
+            videos = []
+            for i in child.iterdir():
+                if not i.is_dir():
+                    if i.name.split(".")[1] in ["mp4", "webm", "ogv", "flv", "avi", "wmv", "3gp"]:
+                        videos.append({
+                            "name": i.name.split(".")[0],
+                            "path": str(i.relative_to(i.parent.parent))
+                        })
+            classes.append({"name": child.name, "videos": videos[::-1]})
+
+    html = ""
+    for folder in classes:
+        html += "<details><summary>" + str(folder['name']) + "</summary>"
+        for video in folder['videos']:
+            html += "<button onclick='vid_play()' vtitle='{title}' vurl='{url}'>{title}</button>".format(
+                title=video['name'], url=video['path'])
+        html += "</details>"
+
+    with open('vidlist.html', 'w') as f:
+        f.write(base_html(html))
 
 if __name__ == "__main__":
     try:
-        cwd = Path.cwd()
-
-        classes = []
-
-        for child in cwd.iterdir():
-            if child.is_dir():
-                videos = []
-                for i in child.iterdir():
-                    if not i.is_dir():
-                        if i.name.split(".")[1] in ["mp4", "webm", "ogv", "flv", "avi", "wmv", "3gp"]:
-                            videos.append({
-                                "name": i.name.split(".")[0],
-                                "path": str(i.relative_to(i.parent.parent))
-                            })
-                classes.append({"name": child.name, "videos": videos[::-1]})
-
-        html = ""
-        for folder in classes:
-            html += "<details><summary>" + str(folder['name']) + "</summary>"
-            for video in folder['videos']:
-                html += "<button onclick='vid_play()' vtitle='{title}' vurl='{url}'>{title}</button>".format(
-                    title=video['name'], url=video['path'])
-            html += "</details>"
-
-        with open('vidlist.html', 'w') as f:
-            f.write(base_html(html))
+    	main()
     except:
         print("Oops :( something went wront, are you sure you are in the right directory ?")
